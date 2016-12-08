@@ -109,6 +109,8 @@ $query = "SELECT c.courseID as 'Course', c.sectionNumber as 'Section', f.name as
     echo '<td><button type="button" class="btn btn-primary">Register</button></td>';
 
 
+
+
 }
 
 mysqli_free_result($result);
