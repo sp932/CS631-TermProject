@@ -91,7 +91,16 @@
                     console.log(cellData[1].innerHTML);
                     console.log(cellData[2].innerHTML);
                     console.log(cellData[3].innerHTML);
+                    
+                    var c = cellData[0].innerHTML;
+                    var se = cellData[1].innerHTML;
+                    var i = cellData[2].innerHTML;
+                    var sl = cellData[3].innerHTML;
+                    
+                    window.location.href = location.protocol + '//' + location.host + location.pathname
+                            +'?c=' +c+'&se=' + se + '&i=' + i + '&sl='+sl;
                 }
+                    
           </script>
 
 
@@ -104,7 +113,7 @@ if(mysqli_connect_error()){
         die("Database Connection Failed: " .
                 mysqli_connect_error() .
                 " (" . mysqli_connect_errno() . ")"
-);
+); 
 }
 
 $username = $_POST['username'];
@@ -131,7 +140,12 @@ $query = "SELECT c.courseID as 'Course', c.sectionNumber as 'Section', f.name as
 }
 
 mysqli_free_result($result);
-
+          
+if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET["sl"]) ) {
+    echo $_GET["se"];
+    echo $_GET["i"];
+    echo $_GET["sl"];    
+}
 ?>
 
               <br/>
