@@ -75,6 +75,24 @@
       </thead>
 
       <tbody>
+                    <script type="text/javascript">
+                function getRowData(id){
+                    var rowData = document.getElementById(id).innerHTML;
+                    
+                    var dummyElement = document.createElement('tr');
+                    
+                    dummyElement.innerHTML = rowData;
+                    
+                    var cellData = dummyElement.getElementsByTagName('td');
+                    
+                    console.log(document.getElementById(id).innerHTML);
+                    console.log(cellData);
+                    console.log(cellData[0].innerHTML);
+                    console.log(cellData[1].innerHTML);
+                    console.log(cellData[2].innerHTML);
+                    console.log(cellData[3].innerHTML);
+                }
+          </script>
 
 
       <?php
@@ -97,23 +115,25 @@ $query = "SELECT c.courseID as 'Course', c.sectionNumber as 'Section', f.name as
 
 	$result = mysqli_query($connection, $query) or die(mysqli_error());
 
-
+    $rowIDNumber = 0;
 	$total = 0;
 	while ($row = mysqli_fetch_array($result)) {
     // Print out the contents of the entry
-    echo '<tr>';
+    $rowIDString = (string)$rowIDNumber;
+    echo '<tr id="' . $rowIDString . '">';
     echo '<td>' . $row['Course'] . '</td>';
     echo '<td>' . $row['Section'] . '</td>';
     echo '<td>' . $row['Instructor'] . '</td>';
     echo '<td>' . $row['Seats Left'] . '</td>';
-    echo '<td><button type="button" class="btn btn-primary">Register</button></td>';
-
-
+    echo '<td><button type="button" class="btn btn-primary" onclick="getRowData(' . $rowIDString. ')">Register</button></td>';
+    echo '</tr>';
+    $rowIDNumber = $rowIDNumber + 1;
 }
 
 mysqli_free_result($result);
 
 ?>
+
               <br/>
 
     </tbody>
