@@ -162,24 +162,44 @@
 
           mysqli_free_result($result);
           
-          function register(){        
-              $query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
+          function register($c, $se, $i, $fid, $sem, $y, $username){  
+              include 'login.php';
+              $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
 
+              $query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
+              
+              echo $query;
+              
               $result = mysqli_query($connection, $query) or die(mysqli_error());
               mysqli_free_result($result);
+            
               
               $query = "UPDATE COURSESECTION "."SET seatsLeft = seatsLeft - 1 WHERE " . "facultyID = '" .$fid."' AND courseID = '".$c."' AND sectionNumber = ".intval($se) ." AND semester ='". $sem."' AND semYear = ".intval($y);
               $result = mysqli_query($connection, $query) or die(mysqli_error());   
               mysqli_free_result($result);
               
           }
+          
+          function anySeatsLeft($c, $se, $i, $fid, $sem, $y, $username){
+              include 'login.php';
+              $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
+                            
+              $query = "SELECT seatsLeft FROM COURSESECTION WHERE " . "facultyID = '" .$fid."' AND courseID = '".$c."' AND sectionNumber = ".intval($se) ." AND semester ='". $sem."' AND semYear = ".intval($y);
+              $result = mysqli_query($connection, $query) or die(mysqli_error());  
+              $row = mysqli_fetch_array($result);
+              mysqli_free_result($result);
+              
+              if($row['seatsLeft'] <= 0){
+                  return false;
+              }
+              else{
+                  return true;
+              }  
+          }
+          
+          function containsPreReq()
  
           if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET["fid"]) && isset($_GET["sl"])) {       
-              echo $_GET["c"];
-              echo $_GET["se"];
-              echo $_GET["i"];
-              echo $_GET["fid"];
-              echo $_GET["sl"];
               $c = $_GET["c"];
               $se = $_GET["se"];
               $i = $_GET["i"];
@@ -187,10 +207,10 @@
               $sem = $_GET["sem"]; 
               $y = $_GET["y"]; 
               $username = $_GET["zz"];  
-              echo $username;
               
-              register();
-          }
+              if(anySeatsLeft($c, $se, $i, $fid, $sem, $y, $username) && ){
+                  register($c, $se, $i, $fid, $sem, $y, $username);
+              }
           }
 
           ?>
