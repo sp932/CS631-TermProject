@@ -113,81 +113,84 @@
 
 
       <?php
-	include 'login.php';
-	// connect to server and test if successful
-	$connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
+          include 'login.php';
+          // connect to server and test if successful
+          $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
 
-if(mysqli_connect_error()){
-        die("Database Connection Failed: " .
+          if(mysqli_connect_error()){
+              die("Database Connection Failed: " .
                 mysqli_connect_error() .
                 " (" . mysqli_connect_errno() . ")"
-); 
-}
+                 ); 
+          }
 
-$username = $_POST['username'];
-$password = $_POST['password'];
-          
-if(isset($username)){
-    echo '<script type="text/javascript">'.
-            'sessionStorage.username = "'. $username .'";'.
-         '</script>';
-}
+          $username = $_POST['username'];
+          $password = $_POST['password'];
 
+          if(isset($username)){
+              echo '<script type="text/javascript">'.
+                  'sessionStorage.username = "'. $username .'";'.         
+                  '</script>';
+          }
 
-$query = "SELECT c.courseID as 'Course',c.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', c.semester as 'Semester', c.semYear as 'Year', c.seatsLeft as 'Seats Left' FROM COURSESECTION c, FACULTY f where f.facultyID = c.facultyID order by c.courseID, c.sectionNumber ASC";
-          
-//$query = "SELECT cs.courseID as 'Course', cs.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', cs.semester as 'Semester', cs.year as 'Year', cs.seatsLeft as 'Seats Left' FROM COURSESECTION cs, FACULTY f where f.facultyID = cs.facultyID order by cs.courseID, cs.sectionNumber ASC, cs.semester = 'Spring', cs.year = 2017";
+          $query = "SELECT c.courseID as 'Course',c.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', c.semester as 'Semester', c.semYear as 'Year', c.seatsLeft as 'Seats Left' FROM COURSESECTION c, FACULTY f where f.facultyID = c.facultyID order by c.courseID, c.sectionNumber ASC";          
 
-	$result = mysqli_query($connection, $query) or die(mysqli_error());
+          //$query = "SELECT cs.courseID as 'Course', cs.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', cs.semester as 'Semester', cs.year as 'Year', cs.seatsLeft as 'Seats Left' FROM COURSESECTION cs, FACULTY f where f.facultyID = cs.facultyID order by cs.courseID, cs.sectionNumber ASC, cs.semester = 'Spring', cs.year = 2017";
+
+          $result = mysqli_query($connection, $query) or die(mysqli_error());
     
-    $rowIDNumber = 0;
-	$total = 0;
-	while ($row = mysqli_fetch_array($result)) {
-    // Print out the contents of the entry
-    $rowIDString = (string)$rowIDNumber;
-    echo '<tr id="' . $rowIDString . '">';
-    echo '<td>' . $row['Course'] . '</td>';
-    echo '<td>' . $row['Section'] . '</td>';
-    echo '<td>' . $row['Instructor'] . '</td>';
-    echo '<td>' . $row['facultyID'] . '</td>';
-    echo '<td>' . $row['Seats Left'] . '</td>';
-    echo '<td>' . $row['Semester'] . '</td>';
-    echo '<td>' . $row['Year'] . '</td>';
-    echo '<td><button type="button" class="btn btn-primary" onclick="getRowData(' . $rowIDString. ')">Register</button></td>';
-    echo '</tr>';
-    $rowIDNumber = $rowIDNumber + 1;
-}
+          $rowIDNumber = 0;
+          $total = 0;	
+          while ($row = mysqli_fetch_array($result)) {
+    
+              // Print out the contents of the entry
+  
+              $rowIDString = (string)$rowIDNumber;
+  
+              echo '<tr id="' . $rowIDString . '">';
+              echo '<td>' . $row['Course'] . '</td>';
+              echo '<td>' . $row['Section'] . '</td>';
+              echo '<td>' . $row['Instructor'] . '</td>';
+              echo '<td>' . $row['facultyID'] . '</td>';
+              echo '<td>' . $row['Seats Left'] . '</td>';
+              echo '<td>' . $row['Semester'] . '</td>';
+              echo '<td>' . $row['Year'] . '</td>';
+              echo '<td><button type="button" class="btn btn-primary" onclick="getRowData(' . $rowIDString. ')">Register</button> </td>';
+              echo '</tr>';
+              $rowIDNumber = $rowIDNumber + 1;
+          }
 
-mysqli_free_result($result);
-          
-if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET["fid"]) && isset($_GET["sl"]) ) {
-    echo $_GET["c"];
-    echo $_GET["se"];
-    echo $_GET["i"];
-    echo $_GET["fid"];
-    echo $_GET["sl"];
-     $c = $_GET["c"];
-     $se = $_GET["se"];
-     $i = $_GET["i"];
-     $fid =$_GET["fid"];
-//     $sl = $_GET["sl"]; 
-     $sem = $_GET["sem"]; 
-     $y = $_GET["y"]; 
-     $username = $_GET["zz"];
-    echo $username;
-//    ?c=' +c+'&se=' + se + '&i=' + i + '&fid='+ fid +'&sl='+sl+'&sem='+sem+'&y='+y+'&zz='+zz;
-$query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
-
-$result = mysqli_query($connection, $query) or die(mysqli_error());
-mysqli_free_result($result);
-
-$query = "UPDATE COURSESECTION "."SET seatsLeft = seatsLeft - 1 WHERE " . "facultyID = '" .$fid."' AND courseID = '".$c."' AND sectionNumber = ".intval($se) ." AND semester ='". $sem."' AND semYear = ".intval($y);
-$result = mysqli_query($connection, $query) or die(mysqli_error());
-mysqli_free_result($result);
+          mysqli_free_result($result);
 
 
-}
-?>
+          if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET["fid"]) && isset($_GET["sl"]) ) {
+              echo $_GET["c"];
+              echo $_GET["se"];
+              echo $_GET["i"];
+              echo $_GET["fid"];
+              echo $_GET["sl"];
+              $c = $_GET["c"];
+              $se = $_GET["se"];
+              $i = $_GET["i"];
+              $fid =$_GET["fid"];
+              $sem = $_GET["sem"]; 
+              $y = $_GET["y"]; 
+              $username = $_GET["zz"];
+              echo $username;
+              
+              $query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
+
+    
+              $result = mysqli_query($connection, $query) or die(mysqli_error());
+    
+              mysqli_free_result($result);
+
+              $query = "UPDATE COURSESECTION "."SET seatsLeft = seatsLeft - 1 WHERE " . "facultyID = '" .$fid."' AND courseID = '".$c."' AND sectionNumber = ".intval($se) ." AND semester ='". $sem."' AND semYear = ".intval($y);
+
+              $result = mysqli_query($connection, $query) or die(mysqli_error());
+              mysqli_free_result($result);
+          }
+          ?>
 
               <br/>
 
