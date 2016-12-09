@@ -181,8 +181,7 @@ $query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber,
 $result = mysqli_query($connection, $query) or die(mysqli_error());
 mysqli_free_result($result);
 
-$query = "UPDATE COURSESECTION SET seatsLeft = seatsLeft - 1 WHERE ".
-         "facultyID = '" .$fid."', courseID = '".$c."', sectionNumber = ".intval($se) .", semester ='". $sem."', semYear = ".intval($y);
+$query = "UPDATE COURSESECTION "."SET seatsLeft = seatsLeft - 1 WHERE " . "facultyID = '" .$fid."' AND courseID = '".$c."' AND sectionNumber = ".intval($se) ." AND semester ='". $sem."' AND semYear = ".intval($y);
 $result = mysqli_query($connection, $query) or die(mysqli_error());
 mysqli_free_result($result);
 
