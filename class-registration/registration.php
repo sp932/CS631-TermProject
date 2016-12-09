@@ -69,13 +69,17 @@
           <th align="center">Course</th>
           <th align="center">Section</th>
           <th align="center">Instructor</th>
+          <th align="center">Instructor ID</th>
           <th align="center">Seats Left</th>
+          <th align="center"></th>
+          <th align="center" ></th>
           <th align="center"></th>
         </tr>
       </thead>
 
       <tbody>
-                    <script type="text/javascript">
+      <script type="text/javascript"> 
+          
                 function getRowData(id){
                     var rowData = document.getElementById(id).innerHTML;
                     
@@ -95,10 +99,14 @@
                     var c = cellData[0].innerHTML;
                     var se = cellData[1].innerHTML;
                     var i = cellData[2].innerHTML;
-                    var sl = cellData[3].innerHTML;
+                    var fid = cellData[3].innerHTML;
+                    var sl = cellData[4].innerHTML;
+                    var sem = cellData[5].innerHTML;
+                    var y = cellData[6].innerHTML;
+                    var zz = sessionStorage.username;
                     
                     window.location.href = location.protocol + '//' + location.host + location.pathname
-                            +'?c=' +c+'&se=' + se + '&i=' + i + '&sl='+sl;
+                            +'?c=' +c+'&se=' + se + '&i=' + i + '&fid='+ fid +'&sl='+sl+'&sem='+sem+'&y='+y+'&zz='+zz;
                 }
                     
           </script>
@@ -118,12 +126,20 @@ if(mysqli_connect_error()){
 
 $username = $_POST['username'];
 $password = $_POST['password'];
+          
+if(isset($username)){
+    echo '<script type="text/javascript">'.
+            'sessionStorage.username = "'. $username .'";'.
+         '</script>';
+}
 
 
-$query = "SELECT c.courseID as 'Course', c.sectionNumber as 'Section', f.name as 'Instructor', c.seatsLeft as 'Seats Left' FROM COURSESECTION c, FACULTY f where f.facultyID = c.facultyID order by c.courseID, c.sectionNumber ASC";
+$query = "SELECT c.courseID as 'Course',c.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', c.semester as 'Semester', c.semYear as 'Year', c.seatsLeft as 'Seats Left' FROM COURSESECTION c, FACULTY f where f.facultyID = c.facultyID order by c.courseID, c.sectionNumber ASC";
+          
+//$query = "SELECT cs.courseID as 'Course', cs.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', cs.semester as 'Semester', cs.year as 'Year', cs.seatsLeft as 'Seats Left' FROM COURSESECTION cs, FACULTY f where f.facultyID = cs.facultyID order by cs.courseID, cs.sectionNumber ASC, cs.semester = 'Spring', cs.year = 2017";
 
 	$result = mysqli_query($connection, $query) or die(mysqli_error());
-
+    
     $rowIDNumber = 0;
 	$total = 0;
 	while ($row = mysqli_fetch_array($result)) {
@@ -133,7 +149,10 @@ $query = "SELECT c.courseID as 'Course', c.sectionNumber as 'Section', f.name as
     echo '<td>' . $row['Course'] . '</td>';
     echo '<td>' . $row['Section'] . '</td>';
     echo '<td>' . $row['Instructor'] . '</td>';
+    echo '<td>' . $row['facultyID'] . '</td>';
     echo '<td>' . $row['Seats Left'] . '</td>';
+    echo '<td>' . $row['Semester'] . '</td>';
+    echo '<td>' . $row['Year'] . '</td>';
     echo '<td><button type="button" class="btn btn-primary" onclick="getRowData(' . $rowIDString. ')">Register</button></td>';
     echo '</tr>';
     $rowIDNumber = $rowIDNumber + 1;
@@ -141,10 +160,30 @@ $query = "SELECT c.courseID as 'Course', c.sectionNumber as 'Section', f.name as
 
 mysqli_free_result($result);
           
-if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET["sl"]) ) {
+if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET["fid"]) && isset($_GET["sl"]) ) {
+    echo $_GET["c"];
     echo $_GET["se"];
     echo $_GET["i"];
-    echo $_GET["sl"];    
+    echo $_GET["fid"];
+    echo $_GET["sl"];
+     $c = $_GET["c"];
+     $se = $_GET["se"];
+     $i = $_GET["i"];
+     $fid =$_GET["fid"];
+//     $sl = $_GET["sl"]; 
+     $sem = $_GET["sem"]; 
+     $y = $_GET["y"]; 
+     $username = $_GET["zz"];
+    echo $username;
+//    ?c=' +c+'&se=' + se + '&i=' + i + '&fid='+ fid +'&sl='+sl+'&sem='+sem+'&y='+y+'&zz='+zz;
+$query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
+    echo "asdfas";
+
+$result = mysqli_query($connection, $query) or die(mysqli_error());
+echo "asdfas";
+mysqli_free_result($result);
+
+    
 }
 ?>
 
