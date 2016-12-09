@@ -161,9 +161,20 @@
           }
 
           mysqli_free_result($result);
+          
+          function register(){        
+              $query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
 
-
-          if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET["fid"]) && isset($_GET["sl"]) ) {
+              $result = mysqli_query($connection, $query) or die(mysqli_error());
+              mysqli_free_result($result);
+              
+              $query = "UPDATE COURSESECTION "."SET seatsLeft = seatsLeft - 1 WHERE " . "facultyID = '" .$fid."' AND courseID = '".$c."' AND sectionNumber = ".intval($se) ." AND semester ='". $sem."' AND semYear = ".intval($y);
+              $result = mysqli_query($connection, $query) or die(mysqli_error());   
+              mysqli_free_result($result);
+              
+          }
+ 
+          if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET["fid"]) && isset($_GET["sl"])) {       
               echo $_GET["c"];
               echo $_GET["se"];
               echo $_GET["i"];
@@ -175,21 +186,13 @@
               $fid =$_GET["fid"];
               $sem = $_GET["sem"]; 
               $y = $_GET["y"]; 
-              $username = $_GET["zz"];
+              $username = $_GET["zz"];  
               echo $username;
               
-              $query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
-
-    
-              $result = mysqli_query($connection, $query) or die(mysqli_error());
-    
-              mysqli_free_result($result);
-
-              $query = "UPDATE COURSESECTION "."SET seatsLeft = seatsLeft - 1 WHERE " . "facultyID = '" .$fid."' AND courseID = '".$c."' AND sectionNumber = ".intval($se) ." AND semester ='". $sem."' AND semYear = ".intval($y);
-
-              $result = mysqli_query($connection, $query) or die(mysqli_error());
-              mysqli_free_result($result);
+              register();
           }
+          }
+
           ?>
 
               <br/>
