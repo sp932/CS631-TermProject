@@ -177,13 +177,16 @@ if (isset($_GET["c"]) && isset($_GET["se"]) && isset($_GET["i"]) && isset($_GET[
     echo $username;
 //    ?c=' +c+'&se=' + se + '&i=' + i + '&fid='+ fid +'&sl='+sl+'&sem='+sem+'&y='+y+'&zz='+zz;
 $query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
-    echo "asdfas";
 
 $result = mysqli_query($connection, $query) or die(mysqli_error());
-echo "asdfas";
 mysqli_free_result($result);
 
-    
+$query = "UPDATE COURSESECTION SET seatsLeft = seatsLeft - 1 WHERE ".
+         "facultyID = '" .$fid."', courseID = '".$c."', sectionNumber = ".intval($se) .", semester ='". $sem."', semYear = ".intval($y);
+$result = mysqli_query($connection, $query) or die(mysqli_error());
+mysqli_free_result($result);
+
+
 }
 ?>
 
