@@ -211,7 +211,6 @@
               $numOfPassedPre = 0;
               $query = "SELECT preCourseID FROM COURSEPREQ WHERE courseID = '". $c . "'";
               
-              echo $query . "\n";
               
               if(!($result = mysqli_query($connection, $query))){
                   echo "There were no pre-requsites for this course \n";
