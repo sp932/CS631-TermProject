@@ -229,7 +229,6 @@
                                      "status = 'A' OR ".
                                      "status = 'B' OR ".
                                      "status = 'C') ";
-                      echo $query2."\n";
                       if($result2 = mysqli_query($connection, $query2)){
                           $numOfPassedPre = mysqli_num_rows($result2);
                           echo $numOfPassedPre . '\n';
