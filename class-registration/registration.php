@@ -137,9 +137,9 @@
           //This query will get all of course that you can register for the current semester. You will have to set the 
           //semester manually for when each semester comes aroud
 
-          $query = "SELECT c.courseID as 'Course',c.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', c.semester as 'Semester', c.semYear as 'Year', c.seatsLeft as 'Seats Left' FROM COURSESECTION c, FACULTY f where f.facultyID = c.facultyID order by c.courseID, c.sectionNumber ASC";          
+//          $query = "SELECT c.courseID as 'Course',c.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', c.semester as 'Semester', c.semYear as 'Year', c.seatsLeft as 'Seats Left' FROM COURSESECTION c, FACULTY f where f.facultyID = c.facultyID order by c.courseID, c.sectionNumber ASC";          
 
-          //$query = "SELECT cs.courseID as 'Course', cs.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', cs.semester as 'Semester', cs.year as 'Year', cs.seatsLeft as 'Seats Left' FROM COURSESECTION cs, FACULTY f where f.facultyID = cs.facultyID order by cs.courseID, cs.sectionNumber ASC, cs.semester = 'Spring', cs.year = 2017";
+          $query = "SELECT c.courseID as 'Course', c.sectionNumber as 'Section', f.name as 'Instructor', f.facultyID as 'facultyID', c.semester as 'Semester', c.semYear as 'Year', c.seatsLeft as 'Seats Left' FROM COURSESECTION c, FACULTY f where f.facultyID = c.facultyID AND c.semester = 'Spring' AND c.semYear = 2017 ORDER BY c.courseID";
 
           $result = mysqli_query($connection, $query) or die(mysqli_error());
             
@@ -173,9 +173,7 @@
               $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
 
               $query = "INSERT INTO STUDENTREG (studentID, facultyID, courseID, sectionNumber, semester, semYear, status) VALUES ('" . $username . "', '" . $fid . "', '". $c ."', " .$se. ", '" . $sem ."', ". intval($y) .", 'Registered')";
-              
-              echo $query;
-              
+                            
               $result = mysqli_query($connection, $query) or die(mysqli_error());
               mysqli_free_result($result);
             
